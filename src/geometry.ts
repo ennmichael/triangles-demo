@@ -1,11 +1,11 @@
 export interface Point {
-    x: number
-    y: number
+    readonly x: number
+    readonly y: number
 }
 
 export interface Line {
-    a: Point
-    b: Point
+    readonly a: Point
+    readonly b: Point
 }
 
 export function translate(p: Point, displacement: Point, t: number): Point {
@@ -22,7 +22,7 @@ export function midpoint(a: Point, b: Point): Point {
     }
 }
 
-export type Triangle = [Point, Point, Point]
+export type Triangle = readonly [Point, Point, Point]
 
 export function createTriangle(): Triangle {
     const a = 1
@@ -48,4 +48,11 @@ export function triangleSides(t: Triangle): [Line, Line, Line] {
         { a: t[1], b: t[2] },
         { a: t[2], b: t[0] },
     ]
+}
+
+export function triangleCenter(t: Triangle): Point {
+    return {
+        x: (t[0].x + t[1].x + t[2].x) / 3,
+        y: (t[0].y + t[1].y + t[2].y) / 3,
+    }
 }
