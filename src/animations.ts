@@ -6,6 +6,8 @@ import { Triangle, rotateTriangle, displacement, translate } from "./geometry"
  */
 export type Animation = IterableIterator<Triangle>
 
+const speed = 2.5e-3
+
 /**
  * @returns An animation which moves the two points so that they end up swapped.
  * @param t The target triangle.
@@ -18,7 +20,6 @@ export function * pointSwapAnimation(
     firstPointIndex: number,
     secondPointIndex: number,
 ): IterableIterator<Triangle> {
-    const speed = 1e-4
     const firstToSecond = { a: triangle[firstPointIndex], b: triangle[secondPointIndex] }
     const secondToFirst = { a: triangle[secondPointIndex], b: triangle[firstPointIndex] }
     let t = 0
@@ -48,7 +49,6 @@ export function * triangleRotateAnimation(
     triangle: Triangle,
     direction: number,
 ): IterableIterator<Triangle> {
-    const speed = 1e-4
     const angle = direction * 2 * Math.PI / 3
     let t = 0
 

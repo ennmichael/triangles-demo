@@ -14,8 +14,8 @@ function createHTMLTriangle(
         throw new Error('No button with requested ID')
 
     const drawing = new TriangleDrawing(svg)
-    leftRotateButton.onclick = () => drawing.animateTriangleRotation(1)
-    rightRotateButton.onclick = () => drawing.animateTriangleRotation(-1)
+    leftRotateButton.onclick = () => drawing.animateTriangleRotation(-1)
+    rightRotateButton.onclick = () => drawing.animateTriangleRotation(1)
 }
 
 createHTMLTriangle('left-triangle', 'left-rotate-1', 'left-rotate-2')

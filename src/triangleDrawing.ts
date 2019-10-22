@@ -1,7 +1,7 @@
 import { Triangle, triangleHeights, triangleSides, createTriangle, translate } from "./geometry"
 import { Animation, triangleRotateAnimation, pointSwapAnimation } from './animations'
 
-const timestep = 100
+const timestep = 20
 
 export type HeightClickCallback = () => void
 
@@ -53,7 +53,7 @@ export default class TriangleDrawing {
                     this.animation = undefined
                 this.draw()
             }
-        })
+        }, timestep)
     }
 
     public animateTriangleRotation(direction: number) {
