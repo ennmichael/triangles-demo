@@ -44,28 +44,38 @@ export default class TriangleDrawing {
 
         this.draw()
 
-        setInterval(() => {
+        let lastTime: number|undefined
+        const frame = (time: number) => {
+            if (lastTime === undefined)
+                lastTime = time
+            const deltaTime = time - lastTime
+
             if (this.animation !== undefined) {
-                const { value: newTriangle, done } = this.animation.next()
-                if (!done)
+                const newTriangle = this.animation(deltaTime)
+                if (newTriangle !== undefined)
                     this.triangle = newTriangle
                 else
                     this.animation = undefined
                 this.draw()
             }
-        }, timestep)
+
+            lastTime = time
+            requestAnimationFrame(frame)
+        }
+
+        requestAnimationFrame(frame)
     }
 
     public animateTriangleRotation(direction: number) {
         if (this.animation !== undefined)
             return
-        this.animation = triangleRotateAnimation(timestep, this.triangle, direction)
+        this.animation = triangleRotateAnimation(this.triangle, direction)
     }
 
     public animatePointSwap(firstPointIndex: number, secondPointIndex: number) {
         if (this.animation !== undefined)
             return
-        this.animation = pointSwapAnimation(timestep, this.triangle, firstPointIndex, secondPointIndex)
+        this.animation = pointSwapAnimation(this.triangle, firstPointIndex, secondPointIndex)
     }
 
     private draw(): void {
