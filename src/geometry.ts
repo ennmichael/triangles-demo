@@ -10,10 +10,18 @@ export interface Line {
 
 export type Triangle = readonly Point[]
 
-export function translate(p: Point, displacement: Point, t: number): Point {
+export function displacement(p1: Point, p2: Point): Point {
     return {
-        x: p.x + displacement.x * t,
-        y: p.y + displacement.y * t,
+        x: p2.x - p1.x,
+        y: p2.y - p1.y,
+    }
+}
+
+export function translate(p: Point, d: Line, t: number): Point {
+    const dis = displacement(d.a, d.b)
+    return {
+        x: p.x + dis.x * t,
+        y: p.y + dis.y * t,
     }
 }
 

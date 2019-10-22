@@ -1,4 +1,4 @@
-import { Triangle, rotateTriangle } from "./geometry"
+import { Triangle, rotateTriangle, displacement, translate } from "./geometry"
 
 /**
  * An animation is just a function which returns different triangles with time.
@@ -19,7 +19,23 @@ export function * pointSwapAnimation(
     secondPointIndex: number,
 ): IterableIterator<Triangle> {
     const speed = 1e-4
+    const firstToSecond = { a: triangle[firstPointIndex], b: triangle[secondPointIndex] }
+    const secondToFirst = { a: triangle[secondPointIndex], b: triangle[firstPointIndex] }
     let t = 0
+
+    for (t; t <= 1; t += speed * timestep) {
+        const newTriangle = [...triangle]
+        newTriangle[firstPointIndex] = translate(triangle[firstPointIndex], firstToSecond, t)
+        newTriangle[secondPointIndex] = translate(triangle[secondPointIndex], secondToFirst, t)
+        yield newTriangle
+    }
+
+    if (t !== 1) {
+        const newTriangle = [...triangle]
+        newTriangle[firstPointIndex] = triangle[secondPointIndex]
+        newTriangle[secondPointIndex] = triangle[firstPointIndex]
+        yield newTriangle
+    }
 }
 
 /**
@@ -35,7 +51,7 @@ export function * triangleRotateAnimation(
     const speed = 1e-4
     const angle = direction * 2 * Math.PI / 3
     let t = 0
-    
+
     for (t; t <= 1; t += speed * timestep)
         yield rotateTriangle(triangle, angle * t)
 
