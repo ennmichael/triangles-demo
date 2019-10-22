@@ -1,6 +1,13 @@
 import { Triangle, triangleHeights, triangleSides, createTriangle } from "./geometry"
+import { Animation, triangleRotateAnimation, pointSwapAnimation } from './animations'
 
-export default class SVGTriangle {
+const timestep = 100
+
+export type HeightClickCallback = () => void
+
+export default class TriangleDrawing {
+    private animation: Animation|undefined
+    private triangle = createTriangle()
     private svgPoints = [createSVGPoint('1.2'), createSVGPoint('1.2'), createSVGPoint('1.2')]
     private svgSides = [createSVGLine(), createSVGLine(), createSVGLine()]
     private svgHeights = [
@@ -9,13 +16,53 @@ export default class SVGTriangle {
         createSVGLine({ stroke: 'grey', strokeWidth: '3', opacity: '0.4' }),
     ]
 
-    constructor(private svg: HTMLElement, private triangle: Triangle) {
+    constructor(private svg: HTMLElement) {
+        for (let i = 0; i < this.svgHeights.length; ++i) {
+            this.svgHeights[i].setAttribute('cursor', 'pointer')
+            switch (i) {
+                case 0:
+                    this.svgHeights[i].onclick = () => this.animatePointSwap(1, 2)
+                    break
+                case 1:
+                    this.svgHeights[i].onclick = () => this.animatePointSwap(0, 2)
+                    break
+                case 2:
+                    this.svgHeights[i].onclick = () => this.animatePointSwap(1, 0)
+                    break
+            }
+        }
+
         svg.append(...this.svgHeights)
         svg.append(...this.svgSides)
         svg.append(...this.svgPoints)
+
+        this.draw()
+
+        setInterval(() => {
+            if (this.animation !== undefined) {
+                const { value: newTriangle, done } = this.animation.next()
+                if (!done)
+                    this.triangle = newTriangle
+                else
+                    this.animation = undefined
+                this.draw()
+            }
+        })
     }
 
-    public draw(): void {
+    public animateTriangleRotation(direction: number) {
+        if (this.animation !== undefined)
+            return
+        this.animation = triangleRotateAnimation(timestep, this.triangle, direction)
+    }
+
+    public animatePointSwap(firstPointIndex: number, secondPointIndex: number) {
+        if (this.animation !== undefined)
+            return
+        this.animation = pointSwapAnimation(timestep, this.triangle, firstPointIndex, secondPointIndex)
+    }
+
+    private draw(): void {
         const sideScale = 150
         const heights = triangleHeights(this.triangle)
         const sides = triangleSides(this.triangle)

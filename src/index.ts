@@ -1,20 +1,22 @@
-import SVGTriangle from './svgTriangle'
-import { createTriangle } from './geometry'
+import TriangleDrawing from './triangleDrawing'
 
-export function drawTriangles() {
-    const leftSvg = document.getElementById('left-triangle')
-    const rightSvg = document.getElementById('right-triangle')
-    if (leftSvg === null || rightSvg === null)
+function createHTMLTriangle(
+    svgId: string,
+    leftRotateButtonId: string,
+    rightRotateButtonId: string,
+): void {
+    const svg = document.getElementById(svgId)
+    const leftRotateButton = document.getElementById(leftRotateButtonId)
+    const rightRotateButton = document.getElementById(rightRotateButtonId)
+    if (svg === null)
         throw new Error('No SVG element with requested ID')
+    if (leftRotateButton === null || rightRotateButton === null)
+        throw new Error('No button with requested ID')
 
-    const leftTriangle = createTriangle()
-    const leftSvgTriangle = new SVGTriangle(leftSvg, leftTriangle)
-
-    const rightTriangle = createTriangle()
-    const rightSvgTriangle = new SVGTriangle(rightSvg, rightTriangle)
-
-    leftSvgTriangle.draw()
-    rightSvgTriangle.draw()
+    const drawing = new TriangleDrawing(svg)
+    leftRotateButton.onclick = () => drawing.animateTriangleRotation(1)
+    rightRotateButton.onclick = () => drawing.animateTriangleRotation(-1)
 }
 
-drawTriangles()
+createHTMLTriangle('left-triangle', 'left-rotate-1', 'left-rotate-2')
+createHTMLTriangle('right-triangle', 'right-rotate-1', 'right-rotate-2')
