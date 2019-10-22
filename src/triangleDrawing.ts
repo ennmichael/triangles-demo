@@ -11,9 +11,9 @@ export default class TriangleDrawing {
     private svgPoints = [createSVGPoint('1.2'), createSVGPoint('1.2'), createSVGPoint('1.2')]
     private svgSides = [createSVGLine(), createSVGLine(), createSVGLine()]
     private svgHeights = [
-        createSVGLine({ stroke: 'grey', strokeWidth: '3', opacity: '0.4' }),
-        createSVGLine({ stroke: 'grey', strokeWidth: '3', opacity: '0.4' }),
-        createSVGLine({ stroke: 'grey', strokeWidth: '3', opacity: '0.4' }),
+        createSVGLine({ stroke: 'grey', strokeWidth: '5', opacity: '0.4' }),
+        createSVGLine({ stroke: 'grey', strokeWidth: '5', opacity: '0.4' }),
+        createSVGLine({ stroke: 'grey', strokeWidth: '5', opacity: '0.4' }),
     ]
     private svgNames = [
         createSvgText('1'),
