@@ -1,4 +1,4 @@
-import { Triangle, triangleHeights, triangleSides, createTriangle } from "./geometry"
+import { Triangle, triangleHeights, triangleSides, createTriangle, translate } from "./geometry"
 import { Animation, triangleRotateAnimation, pointSwapAnimation } from './animations'
 
 const timestep = 100
@@ -14,6 +14,11 @@ export default class TriangleDrawing {
         createSVGLine({ stroke: 'grey', strokeWidth: '3', opacity: '0.4' }),
         createSVGLine({ stroke: 'grey', strokeWidth: '3', opacity: '0.4' }),
         createSVGLine({ stroke: 'grey', strokeWidth: '3', opacity: '0.4' }),
+    ]
+    private svgNames = [
+        createSvgText('1'),
+        createSvgText('2'),
+        createSvgText('3'),
     ]
 
     constructor(private svg: HTMLElement) {
@@ -35,6 +40,7 @@ export default class TriangleDrawing {
         svg.append(...this.svgHeights)
         svg.append(...this.svgSides)
         svg.append(...this.svgPoints)
+        svg.append(...this.svgNames)
 
         this.draw()
 
@@ -63,7 +69,7 @@ export default class TriangleDrawing {
     }
 
     private draw(): void {
-        const sideScale = 150
+        const scaling = 130
         const heights = triangleHeights(this.triangle)
         const sides = triangleSides(this.triangle)
 
@@ -72,16 +78,23 @@ export default class TriangleDrawing {
             const h = heights[i]
             const s = sides[i]
 
-            this.svgHeights[i].setAttribute('x1', (h.a.x * sideScale).toString())
-            this.svgHeights[i].setAttribute('y1', (h.a.y * sideScale).toString())
-            this.svgHeights[i].setAttribute('x2', (h.b.x * sideScale).toString())
-            this.svgHeights[i].setAttribute('y2', (h.b.y * sideScale).toString())
-            this.svgSides[i].setAttribute('x1', (s.a.x * sideScale).toString())
-            this.svgSides[i].setAttribute('y1', (s.a.y * sideScale).toString())
-            this.svgSides[i].setAttribute('x2', (s.b.x * sideScale).toString())
-            this.svgSides[i].setAttribute('y2', (s.b.y * sideScale).toString())
-            this.svgPoints[i].setAttribute('cx', (p.x * sideScale).toString())
-            this.svgPoints[i].setAttribute('cy', (p.y * sideScale).toString())
+            this.svgHeights[i].setAttribute('x1', (h.a.x * scaling).toString())
+            this.svgHeights[i].setAttribute('y1', (h.a.y * scaling).toString())
+            this.svgHeights[i].setAttribute('x2', (h.b.x * scaling).toString())
+            this.svgHeights[i].setAttribute('y2', (h.b.y * scaling).toString())
+            this.svgSides[i].setAttribute('x1', (s.a.x * scaling).toString())
+            this.svgSides[i].setAttribute('y1', (s.a.y * scaling).toString())
+            this.svgSides[i].setAttribute('x2', (s.b.x * scaling).toString())
+            this.svgSides[i].setAttribute('y2', (s.b.y * scaling).toString())
+            this.svgPoints[i].setAttribute('cx', (p.x * scaling).toString())
+            this.svgPoints[i].setAttribute('cy', (p.y * scaling).toString())
+            
+            const namePosition = {
+                x: p.x,
+                y: p.y - 0.015,
+            }
+            this.svgNames[i].setAttribute('x', (namePosition.x * scaling).toString())
+            this.svgNames[i].setAttribute('y', (namePosition.y * scaling).toString())
         }
     }
 }
@@ -90,6 +103,14 @@ function createSVGPoint(radius: string): SVGCircleElement {
     const c = createSvgElement('circle') as SVGCircleElement
     c.setAttribute('r', radius)
     return c
+}
+
+function createSvgText(content: string): SVGTextElement {
+    const text = createSvgElement('text') as SVGTextElement
+    text.setAttribute('text-anchor', 'middle')
+    text.setAttribute('style', 'font-size: 15px')
+    text.innerHTML = content
+    return text
 }
 
 function createSVGLine(
